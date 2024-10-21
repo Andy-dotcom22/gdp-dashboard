@@ -19,7 +19,7 @@ if uploaded_file_defectos and uploaded_file_demoras:
         demoras_caliente = pd.read_excel(uploaded_file_demoras, engine='openpyxl')
 
         # Limpieza de defectos_ancho
-        defectos_ancho['Peso'] = defectos_ancho['Peso'].str.replace(',', '.', regex=False).astype(float, errors='ignore')
+        defectos_ancho['Peso'] = defectos_ancho['Peso'].astype(float, errors='ignore')
         defectos_ancho['Fecha'] = pd.to_datetime(defectos_ancho[['YEAR', 'MONTH', 'DAY ']].rename(columns={'DAY ': 'DAY'}), errors='coerce')
         defectos_ancho = defectos_ancho.drop(columns=['MONTH', 'DAY ', 'YEAR', 'Fecha', 'CAIDAS/REPROCESO'])  # Corregido: Eliminamos la columna 'Fecha' una vez
 
