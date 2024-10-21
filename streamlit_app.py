@@ -7,6 +7,8 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import LabelEncoder
 import locale
 
+locale.setlocale(locale.LC_ALL, 'en_US')
+
 # File uploaders
 uploaded_file_defectos = st.file_uploader("Sube el archivo de Defectos de Ancho", type=["xlsx"])
 uploaded_file_demoras = st.file_uploader("Sube el archivo de Demoras", type=["xlsx"])
