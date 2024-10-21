@@ -19,9 +19,10 @@ if uploaded_file_defectos and uploaded_file_demoras:
         demoras_caliente = pd.read_excel(uploaded_file_demoras, engine='openpyxl')
 
         # Limpieza de defectos_ancho
+        ID_COILD_1 = defectos_ancho["ID COILD"]
         defectos_ancho['Peso'] = defectos_ancho['Peso'].astype(float, errors='ignore')
         defectos_ancho['Fecha'] = pd.to_datetime(defectos_ancho[['YEAR', 'MONTH', 'DAY ']].rename(columns={'DAY ': 'DAY'}), errors='coerce')
-        defectos_ancho = defectos_ancho.drop(columns=['MONTH', 'DAY ', 'YEAR', 'Fecha', 'CAIDAS/REPROCESO'])  # Corregido: Eliminamos la columna 'Fecha' una vez
+        defectos_ancho = defectos_ancho.drop(columns=['MONTH', 'DAY ', 'YEAR', 'Fecha'])  # Corregido: Eliminamos la columna 'Fecha' una vez
 
         # Limpieza de demoras_caliente
         demoras_caliente['Duracion'] = demoras_caliente['Duracion'].astype(float, errors='ignore')
@@ -31,15 +32,19 @@ if uploaded_file_defectos and uploaded_file_demoras:
         demoras_caliente['Mes'] = demoras_caliente['Fecha'].dt.month
 
         # Fusionar tablas
-        defectos_ancho_con_demoras = pd.merge(defectos_ancho, demoras_caliente, on='CAIDAS/REPROCESO', how='left')
+        defectos_ancho_con_demoras_merged = pd.merge(ID_COILD_1, demoras_caliente, on='ID COILD', how='left')
+
+        defectos_ancho_con_demoras = pd.merge(defectos_ancho, defectos_ancho_con_demoras_merged, left_index=True, right_index=True)
 
         # Preprocesamiento: Label Encoding
         label_encoder = LabelEncoder()
         for column in defectos_ancho_con_demoras.columns:
-            if defectos_ancho_con_demoras[column].dtype == 'object':
-                defectos_ancho_con_demoras[column] = label_encoder.fit_transform(defectos_ancho_con_demoras[column])
+           if defectos_ancho_con_demoras[column].dtype == 'object':
 
-        defectos_ancho_con_demoras = defectos_ancho_con_demoras.replace([np.inf, -np.inf], np.nan).fillna(0)
+                defectos_ancho_con_demoras[column] = label_encoder.fit_transform(defectos_ancho_con_demoras[column].astype(str))  # apply label encoding
+
+
+        defectos_ancho_con_demoras.fillna(0, inplace=True)  # Reemplaza valores infinitos e infinitamente pequeños y los convierte en np.nan. Para finalizar reemplazamos todos los nan por 0
 
         # Selección de objetivo (En la barra lateral)
         st.sidebar.header("Selecciona el objetivo")
