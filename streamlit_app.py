@@ -32,7 +32,7 @@ if uploaded_file_defectos and uploaded_file_demoras:
         demoras_caliente['Mes'] = demoras_caliente['Fecha'].dt.month
 
         # Fusionar tablas
-        defectos_ancho_con_demoras_merged = pd.merge(ID_COILD_1, demoras_caliente, on='ID COILD', how='left')
+        defectos_ancho_con_demoras = defectos_ancho.join(ID_COILD_1).join(demoras_caliente.set_index('ID COILD'),on='ID COILD',  lsuffix='_left', rsuffix='_right') #Corregido: how='left' no se utiliza en .join()
 
         defectos_ancho_con_demoras = pd.merge(defectos_ancho, defectos_ancho_con_demoras_merged, left_index=True, right_index=True)
 
