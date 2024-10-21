@@ -7,8 +7,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.preprocessing import LabelEncoder
 import locale
 
-locale.setlocale(locale.LC_ALL, 'en_US')
-
 # File uploaders
 uploaded_file_defectos = st.file_uploader("Sube el archivo de Defectos de Ancho", type=["xlsx"])
 uploaded_file_demoras = st.file_uploader("Sube el archivo de Demoras", type=["xlsx"])
@@ -21,10 +19,18 @@ if uploaded_file_defectos and uploaded_file_demoras:
         # Limpieza y preprocesamiento (antes del merge, para mayor eficiencia. Mover al final si se necesita algún dato como string al momento de unir dataframes)
         ID_COILD_1 = defectos_ancho["ID COILD"]
         
-        # Configura la localización para .astype(errors='ignore'). Si el formato no coincide con los datos numéricos entonces se producirán errores.
-        locale.setlocale(locale.LC_ALL, 'es_ES')  # O 'en_US' u otro, según el formato del archivo
+        try:
 
-        defectos_ancho['Peso'] = defectos_ancho['Peso'].apply(lambda x: locale.atof(x) if isinstance(x,str) else x).astype(float, errors='ignore')
+            locale.setlocale(locale.LC_ALL, 'es_ES')
+
+        except locale.Error as e:
+
+
+
+            st.warning(f"locale 'es_ES' no soportado. Usando 'en_US'. \nSi los datos numéricos no se despliegan correctamente usa la configuración decimal de tu sistema operativo o el formato numerico esperado (el de tus archivos .xlsx de entrada,  España o Colombia): Ej locale.setlocale(locale.LC_ALL,'es_ES'). ")
+
+
+        defectos_ancho["Peso"] = defectos_ancho["Peso"].astype(float, errors='ignore') #Después del try-except de pd.read_excel
         defectos_ancho['Fecha'] = pd.to_datetime(defectos_ancho[['YEAR', 'MONTH', 'DAY ']].rename(columns={'DAY ': 'DAY'}), errors='coerce')
         defectos_ancho = defectos_ancho.drop(columns=['MONTH', 'DAY ', 'YEAR', 'Fecha', 'CAIDAS/REPROCESO'])
 
