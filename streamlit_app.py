@@ -10,8 +10,8 @@ from sklearn.preprocessing import LabelEncoder
 st.title("Análisis de Defectos de Ancho en MC4")
 
 # Carga de datos
-defectos_ancho = pd.read_excel("00-Defectos Ancho - Caidas & Reprocesos - MC4.xlsx")
-demoras_caliente = pd.read_excel("SGL_Demoras_Caliente 4 PES.xlsx")
+defectos_ancho = pd.read_excel("C:/Users/Andrea Santos/Documents/7mo Semestre/Reto/2nd Period/00-Defectos Ancho - Caidas & Reprocesos - MC4.xlsx")
+demoras_caliente = pd.read_excel("C:/Users/Andrea Santos/Documents/7mo Semestre/Reto/2nd Period/SGL_Demoras_Caliente 4 PES.xlsx")
 
 
 # Limpieza de defectos_ancho
