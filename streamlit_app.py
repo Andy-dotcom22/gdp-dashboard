@@ -31,7 +31,7 @@ if uploaded_file_defectos and uploaded_file_demoras:
         demoras_caliente['Mes'] = demoras_caliente['Fecha'].dt.month
 
         # Fusionar tablas
-        defectos_ancho_con_demoras = pd.merge(defectos_ancho, demoras_caliente, on='CAIDAS/REPROCESO', how='right')
+        defectos_ancho_con_demoras = pd.merge(defectos_ancho, demoras_caliente, on='CAIDAS/REPROCESO', how='left')
 
         # Preprocesamiento: Label Encoding
         label_encoder = LabelEncoder()
